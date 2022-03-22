@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NorthwindMVC.Models;
+using Packt.Shared;
 
 namespace NorthwindMVC.Controllers
 {
@@ -13,14 +14,25 @@ namespace NorthwindMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private Northwind db;
+
+        public HomeController(ILogger<HomeController> logger, 
+            Northwind injectedContext)
         {
             _logger = logger;
+            db = injectedContext;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new HomeIndexViewModel
+            {
+                VisitorCount = (new Random()).Next(1, 1001),
+                Categories = db.Categories.ToList(),
+                Products = db.Products.ToList()
+            };
+            
+            return View(model);
         }
 
         public IActionResult Privacy()
