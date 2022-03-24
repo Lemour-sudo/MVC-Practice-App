@@ -45,5 +45,22 @@ namespace NorthwindMVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult ProductDetail(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a product ID in the route, for example, /Home/ProductDetail/3");
+            }
+
+            Product model = db.Products.SingleOrDefault(p => p.ProductID == id);
+
+            if (model == null)
+            {
+                return NotFound($"Product with ID of {id} not found.");
+            }
+
+            return View(model);
+        }
     }
 }
