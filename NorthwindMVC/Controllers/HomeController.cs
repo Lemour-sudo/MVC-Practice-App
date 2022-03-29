@@ -62,5 +62,16 @@ namespace NorthwindMVC.Controllers
 
             return View(model);
         }
+
+        public IActionResult ModelBinding()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ModelBinding(Thing thing)
+        {
+            return View(thing);
+        }
     }
 }
