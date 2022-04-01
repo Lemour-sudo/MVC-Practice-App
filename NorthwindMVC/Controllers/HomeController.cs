@@ -71,7 +71,16 @@ namespace NorthwindMVC.Controllers
         [HttpPost]
         public IActionResult ModelBinding(Thing thing)
         {
-            return View(thing);
+            var checkedModel = new HomeModelBindingViewModel
+            {
+                Thing = thing,
+                HasErrors = !ModelState.IsValid,
+                ValidationErrors = ModelState.Values
+                    .SelectMany(state => state.Errors)
+                    .Select(error => error.ErrorMessage)
+            };
+
+            return View(checkedModel);
         }
     }
 }
