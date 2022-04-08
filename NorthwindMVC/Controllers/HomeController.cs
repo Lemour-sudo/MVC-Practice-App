@@ -64,7 +64,7 @@ namespace NorthwindMVC.Controllers
             return View(model);
         }
 
-        public IActionResult Category(int? id)
+        public async Task<IActionResult> Category(int? id)
         {
             Console.WriteLine("here in category!");
             if (!id.HasValue)
@@ -72,7 +72,7 @@ namespace NorthwindMVC.Controllers
                 return NotFound("You must pass a category ID in the route, for example, /Home/Category/3");
             }
 
-            Category model = db.Categories.SingleOrDefault(c => c.CategoryID == id);
+            Category model = await db.Categories.SingleOrDefaultAsync(c => c.CategoryID == id);
 
             if (model == null)
             {
