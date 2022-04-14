@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Packt.Shared;
 using static System.Console;
 
@@ -33,6 +34,32 @@ namespace NorthwindService
             string databasePath = Path.Combine("../database", "Northwind.db");
             services.AddDbContext<Northwind>(options => 
                 options.UseSqlite($"Data Source={databasePath}"));
+
+            services.AddControllers(options =>
+                {
+                    WriteLine("\nDefault output formatters:");
+
+                    foreach(IOutputFormatter formatter in options.OutputFormatters)
+                    {
+                        var mediaFormatter = formatter as OutputFormatter;
+                        if (mediaFormatter == null)
+                        {
+                            WriteLine($" {formatter.GetType().Name}");
+                        }
+                        else // OutputFormatter class has SupportedMediaTypes
+                        {
+                            WriteLine(" {0}, Media types: {1}",
+                            arg0: mediaFormatter.GetType().Name,
+                            arg1: string.Join(", ",
+                            mediaFormatter.SupportedMediaTypes));
+                        }
+                    }
+
+                    WriteLine();
+                })
+                .AddXmlDataContractSerializerFormatters()
+                .AddXmlSerializerFormatters()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
