@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Packt.Shared;
+using static System.Console;
 
 namespace NorthwindService
 {
@@ -26,6 +30,9 @@ namespace NorthwindService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string databasePath = Path.Combine("../database", "Northwind.db");
+            services.AddDbContext<Northwind>(options => 
+                options.UseSqlite($"Data Source={databasePath}"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
