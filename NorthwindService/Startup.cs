@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Packt.Shared;
+using NorthwindService.Repositories;
 using static System.Console;
 
 namespace NorthwindService
@@ -66,6 +67,8 @@ namespace NorthwindService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "NorthwindService", Version = "v1" });
             });
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
