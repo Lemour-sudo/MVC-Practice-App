@@ -4,6 +4,7 @@ using NorthwindService.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace NorthwindService.Controllers
 {
@@ -115,6 +116,19 @@ namespace NorthwindService.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(string id)
         {
+            if (id == "bad")
+            {
+                ProblemDetails problemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://localhost:5001/customers/failed-to-delete",
+                    Title = $"Customer ID {id} found but failed to delete.",
+                    Detail = "More details like Company Name, Country and so on.",
+                    Instance = HttpContext.Request.Path
+                };
+                return BadRequest(problemDetails);
+            }
+
             Customer existing = await repo.RetrieveAsync(id);
             if (existing == null)
             {
