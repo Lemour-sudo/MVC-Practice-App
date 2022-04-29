@@ -34,6 +34,8 @@ namespace NorthwindService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             string databasePath = Path.Combine("../database", "Northwind.db");
             services.AddDbContext<Northwind>(options => 
                 options.UseSqlite($"Data Source={databasePath}"));
@@ -88,6 +90,12 @@ namespace NorthwindService
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(configurePolicy: options =>
+            {
+                options.WithMethods("GET", "POST", "PUT", "DELETE");
+                options.WithOrigins("https://localhost:5002");
+            });
 
             app.UseEndpoints(endpoints =>
             {
