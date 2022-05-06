@@ -18,6 +18,8 @@ using Packt.Shared;
 using NorthwindService.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.AspNetCore.Http; // GetEndpoint() extension method
+using Microsoft.AspNetCore.Routing; // RouteEndpoint
 using static System.Console;
 
 namespace NorthwindService
@@ -97,6 +99,21 @@ namespace NorthwindService
             {
                 options.WithMethods("GET", "POST", "PUT", "DELETE");
                 options.WithOrigins("https://localhost:5002");
+            });
+
+            app.Use(next => context => {
+                Endpoint endpoint = context.GetEndpoint();
+
+                if (endpoint != null)
+                {
+                    WriteLine("*** Name: {0}; Route: {1}; Metadata: {2}",
+                        arg0: endpoint.DisplayName,
+                        arg1: (endpoint as RouteEndpoint)?.RoutePattern,
+                        arg2: string.Join(", ", endpoint.Metadata));
+                }
+
+                // pass context to next middleware in pipeline
+                return next(context);
             });
 
             app.UseEndpoints(endpoints =>
