@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
+using Packt.Shared;
 
 namespace NorthwindOData
 {
@@ -54,6 +58,26 @@ namespace NorthwindOData
             {
                 endpoints.MapControllers();
             });
+        }
+
+        IEdmModel GetEdmModelForCatalog()
+        {
+            ODataConventionModelBuilder builder = new();
+            builder.EntitySet<Category>("Categories");
+            builder.EntitySet<Product>("Products");
+            builder.EntitySet<Supplier>("Suppliers");
+            return builder.GetEdmModel();
+        }
+
+        IEdmModel GetEdmModelForOrderSystem()
+        {
+            ODataConventionModelBuilder builder = new();
+            builder.EntitySet<Customer>("Customers");
+            builder.EntitySet<Order>("Orders");
+            builder.EntitySet<Employee>("Employees");
+            builder.EntitySet<Product>("Products");
+            builder.EntitySet<Shipper>("Shippers");
+            return builder.GetEdmModel();
         }
     }
 }
