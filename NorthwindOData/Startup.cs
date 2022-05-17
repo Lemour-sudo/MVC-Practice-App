@@ -35,8 +35,11 @@ namespace NorthwindOData
             services.AddCors();
 
             string databasePath = Path.Combine("../database", "Northwind.db");
-            services.AddDbContext<Northwind>(options => 
-                options.UseSqlite($"Data Source={databasePath}"));
+            services.AddDbContext<Northwind>(
+                options => options
+                    .UseSqlite($"Data Source={databasePath}")
+                    .UseLoggerFactory(new ConsoleLoggerFactory())
+            );
 
             services.AddControllers()
                 .AddOData(options => options
