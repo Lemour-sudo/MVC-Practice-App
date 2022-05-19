@@ -46,6 +46,7 @@ namespace NorthwindOData
                     // register OData models including multiple verions
                     .AddRouteComponents(routePrefix: "catalog", model: GetEdmModelForCatalog())
                     .AddRouteComponents(routePrefix: "ordersystem", model: GetEdmModelForOrderSystem())
+                    .AddRouteComponents(routePrefix: "v{version}", model: GetEdmModelForCatalog())
 
                     // enable query options
                     .Select() // enable $select for projection
