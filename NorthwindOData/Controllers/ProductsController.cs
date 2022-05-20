@@ -40,5 +40,12 @@ namespace NorthwindOData.Controllers
 
             return Ok(p);
         }
+
+        public IActionResult Post([FromBody] Product product)
+        {
+            db.Products.Add(product);
+            db.SaveChanges();
+            return Created(product);
+        }
     }
 }
