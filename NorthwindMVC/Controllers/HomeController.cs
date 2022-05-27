@@ -10,6 +10,7 @@ using Packt.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace NorthwindMVC.Controllers
 {
@@ -156,6 +157,29 @@ namespace NorthwindMVC.Controllers
             IEnumerable<Customer> model = JsonConvert.DeserializeObject<IEnumerable<Customer>>(jsonString);
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Services()
+        {
+            try
+            {
+                var client = clientFactory.CreateClient(name: "NorthwindOData");
+
+                HttpRequestMessage request = new(
+                    method: HttpMethod.Get,
+                    requestUri: "catalog/products/?$filter=startswith(ProductName, 'Cha')&$select=ProductId,ProductName,UnitPrice"
+                );
+
+                HttpResponseMessage response = await client.SendAsync(request);
+
+                ViewData["productsCha"] = (await response.Content.ReadFromJsonAsync<ODataProducts>())?.Value;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"NorthwindOData service exception: {ex.Message}");
+            }
+
+            return View();
         }
     }
 }
