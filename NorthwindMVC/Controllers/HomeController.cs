@@ -146,7 +146,7 @@ namespace NorthwindMVC.Controllers
                 uri = $"api/customers/?country={country}";
             }
 
-            HttpClient client = clientFactory.CreateClient(name: "NorthwindService");
+            var client = clientFactory.CreateClient(name: "NorthwindService");
 
             HttpRequestMessage request = new HttpRequestMessage(method: HttpMethod.Get, requestUri: uri);
 
