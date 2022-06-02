@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using GraphQL.Server; // GraphQLOptions
+using NorthwindGraphQL; // GreetQuery, NorthwindSchema
 
 namespace NorthwindGraphQL
 {
@@ -27,6 +29,13 @@ namespace NorthwindGraphQL
         {
 
             services.AddControllers();
+
+            services.AddScoped<NorthwindSchema>();
+
+            services.AddGraphQL()
+                .AddGraphTypes(typeof(NorthwindSchema), ServiceLifetime.Scoped)
+                .AddDataLoader()
+                .AddSystemTextJson(); // serialize responses as JSON
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +44,7 @@ namespace NorthwindGraphQL
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseGraphQLPlayground(); // default path is /ui/playground
             }
 
             app.UseHttpsRedirection();
@@ -47,6 +57,9 @@ namespace NorthwindGraphQL
             {
                 endpoints.MapControllers();
             });
+
+            app.UseGraphQL<NorthwindSchema>(); // default path is /graphql
+            app.UseHttpsRedirection();
         }
     }
 }
