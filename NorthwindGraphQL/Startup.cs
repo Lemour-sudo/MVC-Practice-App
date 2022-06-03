@@ -1,4 +1,4 @@
-using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using GraphQL.Server; // GraphQLOptions
 using NorthwindGraphQL; // GreetQuery, NorthwindSchema
+using Microsoft.EntityFrameworkCore;
+using Packt.Shared; // AddNorthwindContext extension method
 
 namespace NorthwindGraphQL
 {
@@ -27,6 +29,12 @@ namespace NorthwindGraphQL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string databasePath = Path.Combine("../database", "Northwind.db");
+            services.AddDbContext<Northwind>(
+                options => options
+                    .UseSqlite($"Data Source={databasePath}")
+                    .UseLoggerFactory(new ConsoleLoggerFactory())
+            );
 
             services.AddControllers();
 

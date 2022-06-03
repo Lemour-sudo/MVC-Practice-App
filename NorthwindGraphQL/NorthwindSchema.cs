@@ -1,5 +1,7 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using GraphQL.Types; // Schema
+using Packt.Shared;
 
 namespace NorthwindGraphQL
 {
@@ -7,7 +9,8 @@ namespace NorthwindGraphQL
     {
         public NorthwindSchema(IServiceProvider provider) : base(provider)
         {
-            Query = new GreetQuery();
+            // Query = new GreetQuery();
+            Query = new NorthwindQuery(provider.GetRequiredService<Northwind>());
         }
     }
 }
