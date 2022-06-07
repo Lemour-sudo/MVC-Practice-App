@@ -1,8 +1,8 @@
 @using Packt.Shared
 @{
   ViewData["Title"] = "Services";
-  Product[]? products = ViewData["productsCha"] as Product[];
-  Product[]? seafoodProducts = ViewData["seafoodProducts"] as Product[];
+  Product[] products = ViewData["productsCha"] as Product[];
+  Product[] seafoodProducts = ViewData["seafoodProducts"] as Product[];
 }
 <div class="text-center">
   <h1 class="display-4">@ViewData["Title"]</h1>
@@ -12,7 +12,7 @@
   }
   @if (ViewData["shipr"] != null)
   {
-    Shipper? shipper = ViewData["shipr"] as Shipper;
+    Shipper shipper = ViewData["shipr"] as Shipper;
     <p class="alert alert-danger">
       ShipperId: @shipper?.ShipperID, CompanyName: @shipper?.ShipperName, Phone: @shipper?.Phone
     </p>

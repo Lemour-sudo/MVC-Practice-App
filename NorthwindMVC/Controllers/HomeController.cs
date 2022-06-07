@@ -71,7 +71,6 @@ namespace NorthwindMVC.Controllers
 
         public async Task<IActionResult> Category(int? id)
         {
-            Console.WriteLine("here in category!");
             if (!id.HasValue)
             {
                 return NotFound("You must pass a category ID in the route, for example, /Home/Category/3");
