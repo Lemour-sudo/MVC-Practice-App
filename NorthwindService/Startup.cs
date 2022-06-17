@@ -65,8 +65,7 @@ namespace NorthwindService
                     WriteLine();
                 })
                 .AddXmlDataContractSerializerFormatters()
-                .AddXmlSerializerFormatters()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .AddXmlSerializerFormatters();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
