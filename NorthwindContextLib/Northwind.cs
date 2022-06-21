@@ -19,6 +19,10 @@ namespace Packt.Shared
         {
             base.OnModelCreating(modelBuilder);
 
+            // UnitPrice will need to be converted to double when sorting by UnitPrice since ...
+            // SQLite does not support Decimal type
+            modelBuilder.Entity<Product>().Property(p => p.UnitPrice).HasConversion<double>();
+
             modelBuilder.Entity<Category>()
                 .Property(c => c.CategoryName)
                 .IsRequired()
