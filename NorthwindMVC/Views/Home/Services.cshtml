@@ -6,10 +6,12 @@
 }
 <div class="text-center">
   <h1 class="display-4">@ViewData["Title"]</h1>
+
   @if (ViewData["greeting"] != null)
   {
     <p class="alert alert-primary">@ViewData["greeting"]</p>
   }
+
   @if (ViewData["shipr"] != null)
   {
     Shipper shipper = ViewData["shipr"] as Shipper;
@@ -17,6 +19,7 @@
       ShipperId: @shipper?.ShipperID, CompanyName: @shipper?.ShipperName, Phone: @shipper?.Phone
     </p>
   }
+
   @if (ViewData["productsCha"] != null)
   {
     <h2>Products that start with Cha using OData</h2>
@@ -38,9 +41,27 @@
       }
     </p>
   }
+
   @if (seafoodProducts is not null)
   {
     <h2>Seafood products using GraphQL</h2>
+    <p>
+      @foreach (Product p in seafoodProducts)
+      {
+        <span class="badge badge-success">
+          @p.ProductID
+          @p.ProductName
+          -
+          @(p.UnitsInStock is null ? "0" : p.UnitsInStock.Value) in stock
+        </span>
+      }
+    </p>
+  }
+
+  @if (seafoodProducts is not null)
+  {
+    <h2>Seafood products using GraphQL</h2>
+
     <p>
       @foreach (Product p in seafoodProducts)
       {

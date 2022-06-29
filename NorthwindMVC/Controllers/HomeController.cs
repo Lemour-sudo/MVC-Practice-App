@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Text; // Encoding
 
 namespace NorthwindMVC.Controllers
 {
@@ -176,6 +177,44 @@ namespace NorthwindMVC.Controllers
             catch (Exception ex)
             {
                 _logger.LogWarning($"NorthwindOData service exception: {ex.Message}");
+            }
+
+            try
+            {
+                HttpClient client = clientFactory.CreateClient(name: "NorthwindGraphQL");
+
+                HttpRequestMessage request = new(
+                    method: HttpMethod.Post,
+                    requestUri: "graphql"
+                );
+
+                request.Content = new StringContent(
+                    content: @"{
+                        products (categoryID: 8) {
+                            productID
+                            productName
+                            unitsInStock
+                        }
+                    }",
+                    encoding: Encoding.UTF8,
+                    mediaType: "application/graphql"
+                );
+
+                HttpResponseMessage response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewData["seafoodProducts"] = (await response.Content
+                        .ReadFromJsonAsync<GraphQLProducts>())?.Data?.Products;
+                }
+                else
+                {
+                    ViewData["seafoodProducts"] = Enumerable.Empty<Product>().ToArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Northwind.GraphQL service exception: {ex.Message}");
             }
 
             return View();
